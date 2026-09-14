@@ -7,6 +7,7 @@ import org.example.healthcarequalite.enums.Role;
 import org.example.healthcarequalite.entity.User;
 import org.example.healthcarequalite.repository.UserRepository;
 import org.example.healthcarequalite.security.JwtService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,9 +31,7 @@ public class AuthService {
   public AuthResponse register(RegisterRequest request) {
 
     if (userRepository.existsByEmail(request.getEmail())) {
-      throw new IllegalArgumentException(
-              "Cette adresse e-mail existe déjà"
-      );
+      throw new IllegalArgumentException("Cette adresse e-mail existe déjà");
     }
 
     User user = new User();
@@ -44,9 +43,7 @@ public class AuthService {
 
     user.setUsername(userName);
     user.setEmail(request.getEmail());
-    user.setPassword(
-            passwordEncoder.encode(request.getPassword())
-    );
+    user.setPassword( passwordEncoder.encode(request.getPassword()) );
     user.setRole(Role.STAFF);
 
     User savedUser = userRepository.save(user);
@@ -66,9 +63,7 @@ public class AuthService {
 
     authenticationManager.authenticate(authenticationToken);
 
-    User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() ->
-                    new IllegalArgumentException("Utilisateur introuvable")
-            );
+    User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new IllegalArgumentException("Utilisateur introuvable"));
 
     String token = jwtService.generate(user.getEmail());
 

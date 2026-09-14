@@ -1,9 +1,10 @@
 package org.example.healthcarequalite.dto.statistics;
 
 import lombok.Data;
+import java.io.Serializable;
 
 @Data
-public class DepartmentRiskDTO {
+public class DepartmentRiskDTO   implements Serializable {
 
     private Long departmentId;
 

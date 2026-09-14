@@ -16,6 +16,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import jakarta.servlet.DispatcherType;
+
+
 
 @Configuration
 @EnableMethodSecurity
@@ -59,17 +62,18 @@ public class SecurityConfig {
             )
 
 
-      .authorizeHttpRequests(
-              a->a.requestMatchers(
-                      "/api/auth/**",
-                      "/swagger-ui/**",
-                      "/swagger-ui.html",
-                      "/v3/api-docs/**").permitAll()
+            .authorizeHttpRequests(a -> a
+                    .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
+                    .requestMatchers(
+                            "/api/auth/**",
+                            "/swagger-ui/**",
+                            "/swagger-ui.html",
+                            "/v3/api-docs/**"
+                    ).permitAll()
+                    .anyRequest().authenticated()
+            )
 
-                      .anyRequest().authenticated())
-
-      .authenticationProvider(
-              authenticationProvider()).addFilterBefore(
+      .authenticationProvider( authenticationProvider()).addFilterBefore(
                       jwtFilter, UsernamePasswordAuthenticationFilter.class).build();
   }
 }

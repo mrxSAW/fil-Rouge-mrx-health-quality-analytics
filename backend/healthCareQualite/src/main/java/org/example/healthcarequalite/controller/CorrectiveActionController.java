@@ -19,7 +19,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.List;import org.example.healthcarequalite.dto.user.ResponsibleUserDTO;
 
 @RestController
 @RequestMapping("/api/corrective-actions")
@@ -148,6 +148,26 @@ public class CorrectiveActionController {
     }
 
 
+
+
+    @GetMapping("/responsible-users")
+    @PreAuthorize("hasAnyRole('ADMIN', 'QHSE_MANAGER')")
+    public ResponseEntity<Page<ResponsibleUserDTO>> findResponsibleUsers( @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "100") int size) {
+
+        if (page < 0) {
+            throw new IllegalArgumentException( "Le numéro de page doit être positif ou égal à zéro" );
+        }
+
+        if (size < 1 || size > 100) {
+            throw new IllegalArgumentException( "La taille de page doit être comprise entre 1 et 100");
+        }
+
+        Pageable pageable = PageRequest.of( page, size, Sort.by("lastName", "firstName", "id") );
+
+        Page<ResponsibleUserDTO> users = correctiveActionService.findResponsibleUsers(pageable);
+
+        return ResponseEntity.ok(users);
+    }
 
 
 }

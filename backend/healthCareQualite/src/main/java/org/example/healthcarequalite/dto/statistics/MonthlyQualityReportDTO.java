@@ -1,9 +1,11 @@
 package org.example.healthcarequalite.dto.statistics;
 
 import lombok.Data;
+import java.io.Serializable;
+
 
 @Data
-public class MonthlyQualityReportDTO {
+public class MonthlyQualityReportDTO implements Serializable {
 
     private Integer year;
 

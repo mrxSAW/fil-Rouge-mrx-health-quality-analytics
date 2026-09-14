@@ -9,6 +9,8 @@ import org.example.healthcarequalite.exception.ResourceNotFoundException;
 import org.example.healthcarequalite.mapper.AuditMapper;
 import org.example.healthcarequalite.repository.AuditRepository;
 import org.example.healthcarequalite.repository.DepartmentRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +34,7 @@ public class AuditService {
         this.auditMapper = auditMapper;
     }
 
+    @CacheEvict(cacheNames = "statistics", allEntries = true)
     public AuditGetDTO create(AuditPostDTO dto) {
 
         double conformityRate = calculateConformityRate(
@@ -89,6 +92,7 @@ public class AuditService {
         return new PageImpl<>( auditDTOs, pageable, audits.getTotalElements() );
     }
 
+    @CacheEvict(cacheNames = "statistics", allEntries = true)
     public AuditGetDTO update(Long id, AuditUpdateDTO dto) {
 
         Optional<Audit> auditResult = auditRepository.findById(id);
@@ -117,6 +121,7 @@ public class AuditService {
         return auditMapper.toGetDTO(updatedAudit);
     }
 
+    @CacheEvict(cacheNames = "statistics", allEntries = true)
     public void delete(Long id) {
 
         Optional<Audit> result = auditRepository.findById(id);

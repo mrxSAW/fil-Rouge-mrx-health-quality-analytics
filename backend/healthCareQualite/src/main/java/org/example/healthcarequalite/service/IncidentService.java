@@ -14,6 +14,8 @@ import org.example.healthcarequalite.mapper.IncidentMapper;
 import org.example.healthcarequalite.repository.DepartmentRepository;
 import org.example.healthcarequalite.repository.IncidentRepository;
 import org.example.healthcarequalite.repository.UserRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.example.healthcarequalite.enums.IncidentGravity;
@@ -42,6 +44,7 @@ public class IncidentService {
     this.incidentMapper = incidentMapper;
   }
 
+  @CacheEvict(cacheNames = {"statistics", "lists"}, allEntries = true)
   public IncidentGetDTO create(IncidentPostDTO incidentPostDTO, String reporterEmail) {
     Department department = departmentRepository.findById(incidentPostDTO.getDepartmentId())
    .orElseThrow(() -> new ResourceNotFoundException("Département introuvable : " + incidentPostDTO.getDepartmentId()));
@@ -99,6 +102,7 @@ public class IncidentService {
     return incidentMapper.toGetDTO(incident);
   }
 
+  @CacheEvict(cacheNames = {"statistics", "lists"}, allEntries = true)
   public IncidentGetDTO update(Long id, IncidentUpdateDTO incidentUpdateDTO) {
     Incident incident = findEntityById(id);
 
@@ -119,6 +123,7 @@ public class IncidentService {
     return incidentMapper.toGetDTO(updatedIncident);
   }
 
+  @CacheEvict(cacheNames = {"statistics", "lists"}, allEntries = true)
   public IncidentGetDTO updateStatus(Long id, IncidentStatusDTO incidentStatusDTO) {
     Incident incident = findEntityById(id);
 
@@ -129,6 +134,7 @@ public class IncidentService {
     return incidentMapper.toGetDTO(updatedIncident);
   }
 
+  @CacheEvict(cacheNames = {"statistics", "lists"}, allEntries = true)
   public void delete(Long id) {
 
     Incident incident = findEntityById(id);
@@ -138,8 +144,7 @@ public class IncidentService {
 
   private Incident findEntityById(Long id) {
 
-    return incidentRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Incident introuvable : " + id));
+    return incidentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Incident introuvable : " + id));
   }
 
 

@@ -14,6 +14,8 @@ import org.example.healthcarequalite.mapper.CorrectiveActionMapper;
 import org.example.healthcarequalite.repository.CorrectiveActionRepository;
 import org.example.healthcarequalite.repository.IncidentRepository;
 import org.example.healthcarequalite.repository.UserRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
@@ -23,7 +25,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Optional;import org.example.healthcarequalite.dto.user.ResponsibleUserDTO;
 
 @Service
 public class CorrectiveActionService {
@@ -41,6 +43,7 @@ public class CorrectiveActionService {
         this.correctiveActionMapper = correctiveActionMapper;
     }
 
+    @CacheEvict(cacheNames = {"statistics", "lists"}, allEntries = true)
     public CorrectiveActionGetDTO create(CorrectiveActionPostDTO dto) {
 
         Optional<Incident> incidentResult = incidentRepository.findById(dto.getIncidentId());
@@ -100,7 +103,7 @@ public class CorrectiveActionService {
         return correctiveActionMapper.toGetDTO(action);
     }
 
-
+    @Cacheable( cacheNames = "lists", key = "{#root.targetClass.simpleName, #root.methodName, #root.args}", condition = "!T(org.springframework.security.core.context.SecurityContextHolder)" + ".getContext().getAuthentication().getAuthorities()" + ".![authority].contains('ROLE_STAFF')")
     public Page<CorrectiveActionGetDTO> findAll(Long responsibleUserId, String connectedEmail, Pageable pageable) {
 
         Optional<User> userResult = userRepository.findByEmail(connectedEmail);
@@ -140,7 +143,7 @@ public class CorrectiveActionService {
         );
     }
 
-
+    @CacheEvict(cacheNames = {"statistics", "lists"}, allEntries = true)
     public CorrectiveActionGetDTO update( Long id, CorrectiveActionUpdateDTO dto) {
 
         Optional<CorrectiveAction> actionResult = correctiveActionRepository.findById(id);
@@ -177,7 +180,7 @@ public class CorrectiveActionService {
 
 
 
-
+    @CacheEvict(cacheNames = {"statistics", "lists"}, allEntries = true)
     public CorrectiveActionGetDTO updateStatus( Long id, CorrectiveActionStatusDTO dto) {
 
         Optional<CorrectiveAction> result = correctiveActionRepository.findById(id);
@@ -205,7 +208,7 @@ public class CorrectiveActionService {
         return correctiveActionMapper.toGetDTO(updatedAction);
     }
 
-
+    @Cacheable(cacheNames = "lists", key = "{#root.targetClass.simpleName, #root.methodName, #root.args}", condition = "!T(org.springframework.security.core.context.SecurityContextHolder)" + ".getContext().getAuthentication().getAuthorities()" + ".![authority].contains('ROLE_STAFF')")
     public Page<CorrectiveActionGetDTO> findOverdue( Long responsibleUserId, String connectedEmail, Pageable pageable) {
 
         Optional<User> userResult = userRepository.findByEmail(connectedEmail);
@@ -251,6 +254,28 @@ public class CorrectiveActionService {
     }
 
 
+    public Page<ResponsibleUserDTO> findResponsibleUsers(Pageable pageable) {
 
+        Page<User> users = userRepository.findAll(pageable);
+
+        List<ResponsibleUserDTO> userDTOs = new ArrayList<>();
+
+        for (User user : users.getContent()) {
+
+            ResponsibleUserDTO dto = new ResponsibleUserDTO();
+
+            dto.setId(user.getId());
+            dto.setFirstName(user.getFirstName());
+            dto.setLastName(user.getLastName());
+
+            userDTOs.add(dto);
+        }
+
+        return new PageImpl<>(
+                userDTOs,
+                pageable,
+                users.getTotalElements()
+        );
+    }
 
 }

@@ -8,6 +8,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 import org.example.healthcarequalite.entity.Audit;
 import org.example.healthcarequalite.repository.AuditRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,19 +21,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+
 public class AuditPdfService {
 
     private final AuditRepository auditRepository;
 
     public AuditPdfService(AuditRepository auditRepository) {
+
         this.auditRepository = auditRepository;
     }
 
     @Transactional(readOnly = true)
-    public byte[] generateReport(
-            Long departmentId,
-            LocalDate startDate,
-            LocalDate endDate) throws IOException {
+    public byte[] generateReport( Long departmentId, LocalDate startDate, LocalDate endDate) throws IOException {
 
         if (departmentId != null && departmentId <= 0) {
             throw new IllegalArgumentException(
@@ -218,10 +218,7 @@ public class AuditPdfService {
         return value.toString();
     }
 
-    private void addText(
-            List<String> lines,
-            String text,
-            PDType1Font font) throws IOException {
+    private void addText(List<String> lines, String text, PDType1Font font) throws IOException {
 
         StringBuilder currentLine = new StringBuilder();
 

@@ -5,6 +5,7 @@ import org.example.healthcarequalite.entity.Report;
 import org.example.healthcarequalite.exception.ResourceNotFoundException;
 import org.example.healthcarequalite.mapper.ReportMapper;
 import org.example.healthcarequalite.repository.ReportRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

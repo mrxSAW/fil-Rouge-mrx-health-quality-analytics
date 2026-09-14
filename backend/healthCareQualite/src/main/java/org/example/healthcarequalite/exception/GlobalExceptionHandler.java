@@ -3,6 +3,9 @@ import org.springframework.http.*;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import java.time.LocalDate;
 import java.util.*;
 
 @RestControllerAdvice
@@ -27,8 +30,7 @@ public class GlobalExceptionHandler {
 
 
   @ExceptionHandler(AccessDeniedException.class)
-  public ResponseEntity<Map<String, String>> handleAccessDenied(
-          AccessDeniedException ex) {
+  public ResponseEntity<Map<String, String>> handleAccessDenied(AccessDeniedException ex) {
 
     Map<String, String> response = new LinkedHashMap<>();
 
@@ -39,6 +41,27 @@ public class GlobalExceptionHandler {
   }
 
 
+  @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+  public ResponseEntity<Map<String, String>> handleInvalidParameter(MethodArgumentTypeMismatchException ex) {
+
+    String message;
+
+    if (LocalDate.class.equals(ex.getRequiredType())) {message = "Le paramètre '" + ex.getName()
+              + "' doit être une date valide au format AAAA-MM-JJ"
+              + ", par exemple 2026-09-01.";
+    } else {
+      message = "La valeur du paramètre '"
+              + ex.getName() + "' est invalide.";
+    }
+
+    Map<String, String> response = new LinkedHashMap<>();
+    response.put("error", "Paramètre invalide");
+    response.put("message", message);
+
+    return ResponseEntity.badRequest()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(response);
+  }
 
 
 }

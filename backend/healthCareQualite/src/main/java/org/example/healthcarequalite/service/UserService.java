@@ -9,6 +9,8 @@ import org.example.healthcarequalite.exception.ResourceNotFoundException;
 import org.example.healthcarequalite.mapper.UserMapper;
 import org.example.healthcarequalite.repository.DepartmentRepository;
 import org.example.healthcarequalite.repository.UserRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,12 +30,12 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-
+    @Cacheable(cacheNames = "lists", key = "{#root.targetClass.simpleName, #root.methodName, #root.args}", condition = "!T(org.springframework.security.core.context.SecurityContextHolder)" + ".getContext().getAuthentication().getAuthorities()" + ".![authority].contains('ROLE_STAFF')")
     public Page<UserGetDTO> findAll(Pageable pageable) {
 
         Page<User> users = userRepository.findAll(pageable);
 
-        return users.map(userMapper::toGetDTO);
+        return users.map(user -> userMapper.toGetDTO(user));
     }
 
     public UserGetDTO findById(Long id) {
@@ -43,6 +45,7 @@ public class UserService {
         return userMapper.toGetDTO(user);
     }
 
+    @CacheEvict(cacheNames = {"statistics", "lists"}, allEntries = true)
     public UserGetDTO update(Long id, UserUpdateDTO userUpdateDTO) {
 
         User user = findEntityById(id);
@@ -72,6 +75,7 @@ public class UserService {
         return userMapper.toGetDTO(updatedUser);
     }
 
+    @CacheEvict(cacheNames = {"statistics", "lists"}, allEntries = true)
     public UserGetDTO updateRole(Long id, UserRoleDTO userRoleDTO) {
         User user = findEntityById(id);
 
@@ -82,6 +86,7 @@ public class UserService {
         return userMapper.toGetDTO(user);
     }
 
+    @CacheEvict(cacheNames = {"statistics", "lists"}, allEntries = true)
     public void delete(Long id) {
 
         User user = findEntityById(id);

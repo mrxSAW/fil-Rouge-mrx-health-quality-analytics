@@ -9,6 +9,8 @@ import org.example.healthcarequalite.exception.ResourceNotFoundException;
 import org.example.healthcarequalite.mapper.MonthlyAdmissionsMapper;
 import org.example.healthcarequalite.repository.DepartmentRepository;
 import org.example.healthcarequalite.repository.MonthlyAdmissionsRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +34,7 @@ public class MonthlyAdmissionsService {
         this.monthlyAdmissionsMapper = monthlyAdmissionsMapper;
     }
 
+    @CacheEvict(cacheNames = "statistics", allEntries = true)
     public MonthlyAdmissionsGetDTO create(MonthlyAdmissionsPostDTO dto) {
 
         Optional<Department> result = departmentRepository.findById(dto.getDepartmentId());
@@ -98,6 +101,7 @@ public class MonthlyAdmissionsService {
     }
 
 
+    @CacheEvict(cacheNames = "statistics", allEntries = true)
     public MonthlyAdmissionsGetDTO update( Long id, MonthlyAdmissionsUpdateDTO dto) {
 
         Optional<MonthlyAdmissions> result = monthlyAdmissionsRepository.findById(id);

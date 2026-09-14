@@ -15,13 +15,10 @@ public class OpenApiConfig {
 
     @Bean
     public OpenAPI healthQualityOpenAPI() {
-        return new OpenAPI().info(new Info()
-                        .title("Health Quality Analytics API")
-                        .version("1.0")
+        return new OpenAPI().info(new Info().title("Health Quality Analytics API").version("1.0")
                         .description("Documentation de l’API Health Quality Analytics"))
                 .addSecurityItem(new SecurityRequirement().addList(SECURITY_SCHEME_NAME))
-                .components(new Components()
-                                .addSecuritySchemes(
+                .components(new Components().addSecuritySchemes(
                                         SECURITY_SCHEME_NAME,
                                         new SecurityScheme()
                                                 .name(SECURITY_SCHEME_NAME)

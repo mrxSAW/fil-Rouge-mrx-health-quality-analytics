@@ -2,10 +2,11 @@ package org.example.healthcarequalite.dto.audit;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Data
-public class AuditGetDTO {
+public class AuditGetDTO  implements Serializable {
 
     private Long id;
 

@@ -18,8 +18,5 @@ public interface UserMapper {
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "department", ignore = true)
-    void updateUser(
-            UserUpdateDTO userUpdateDTO,
-            @MappingTarget User user
-    );
+    void updateUser( UserUpdateDTO userUpdateDTO, @MappingTarget User user );
 }

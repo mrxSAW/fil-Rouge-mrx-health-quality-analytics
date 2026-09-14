@@ -8,6 +8,7 @@ import org.example.healthcarequalite.enums.IncidentGravity;
 import org.example.healthcarequalite.enums.IncidentType;
 import org.example.healthcarequalite.exception.ResourceNotFoundException;
 import org.example.healthcarequalite.repository.*;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Cacheable( cacheNames = "statistics", key = "{#root.methodName, #root.args}")
 public class StatisticsService {
 
     private final IncidentService incidentService;
@@ -227,21 +229,14 @@ public class StatisticsService {
             throw new IllegalArgumentException( "Le mois doit être compris entre 1 et 12" );
         }
 
-        Optional<Department> departmentResult =  departmentRepository.findById(departmentId);
-
-        if (departmentResult.isEmpty()) {
-            throw new ResourceNotFoundException( "Département introuvable : " + departmentId );
-        }
-
-        Department department = departmentResult.get();
+        Department department = departmentRepository.findById(departmentId).orElseThrow(() -> new ResourceNotFoundException("Département introuvable"));
 
         LocalDate startDate = LocalDate.of(year, month, 1);
         LocalDate endDate = startDate.plusMonths(1);
 
         long totalIncidents = incidentRepository.countIncidentsForPeriod( departmentId, startDate, endDate );
 
-        Optional<MonthlyAdmissions> admissionsResult =
-                monthlyAdmissionsRepository.findByDepartmentIdAndYearAndMonth( departmentId, year, month );
+        Optional<MonthlyAdmissions> admissionsResult = monthlyAdmissionsRepository.findByDepartmentIdAndYearAndMonth( departmentId, year, month );
 
         Integer admissionCount = null;
         Double rate = null;
@@ -428,8 +423,7 @@ public class StatisticsService {
 
             long totalIncidents = incidentRepository.countByDepartmentId(department.getId());
 
-            DepartmentIncidentStatisticsDTO dto =
-                    new DepartmentIncidentStatisticsDTO();
+            DepartmentIncidentStatisticsDTO dto = new DepartmentIncidentStatisticsDTO();
 
             dto.setDepartmentId(department.getId());
             dto.setDepartmentName(department.getName());

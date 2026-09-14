@@ -19,6 +19,7 @@ public class JwtAuthenticationEntryPoint
     private final ObjectMapper objectMapper;
 
     public JwtAuthenticationEntryPoint(ObjectMapper objectMapper) {
+
         this.objectMapper = objectMapper;
     }
 

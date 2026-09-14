@@ -27,6 +27,8 @@
         <jjwt.version>0.12.6</jjwt.version>
     </properties>
 
+
+
     <dependencies>
 
         <!-- API REST -->
@@ -154,9 +156,25 @@
         </dependency>
 
 
+       <!--flayway-->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-mysql</artifactId>
+        </dependency>
+
+
+
+
     </dependencies>
 
     <build>
+
+
         <plugins>
 
             <!-- Compilation Lombok + MapStruct -->
@@ -202,6 +220,9 @@
             </plugin>
 
         </plugins>
+
+
+
     </build>
 
 </project>

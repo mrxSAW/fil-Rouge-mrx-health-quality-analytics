@@ -3,8 +3,10 @@ package org.example.healthcarequalite.dto.user;
 import lombok.Data;
 import org.example.healthcarequalite.enums.Role;
 
+import java.io.Serializable;
+
 @Data
-public class UserGetDTO {
+public class UserGetDTO implements Serializable {
 
     private Long id;
 

@@ -7,6 +7,8 @@ import org.example.healthcarequalite.dto.department.DepartmentUpdateDTO;
 import org.example.healthcarequalite.exception.ResourceNotFoundException;
 import org.example.healthcarequalite.mapper.DepartmentMapper;
 import org.example.healthcarequalite.repository.DepartmentRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ public class DepartmentService {
     this.departmentMapper = departmentMapper;
   }
 
+  @CacheEvict(cacheNames = {"statistics", "lists"}, allEntries = true)
   public DepartmentGetDTO create(DepartmentPostDTO departmentPostDTO) {
     Department department =  departmentMapper.toEntity(departmentPostDTO);
 
@@ -32,6 +35,7 @@ public class DepartmentService {
     return departmentMapper.toGetDTO(savedDepartment);
   }
 
+  @Cacheable(cacheNames = "lists", key = "{#root.targetClass.simpleName, #root.methodName, #root.args}", condition = "!T(org.springframework.security.core.context.SecurityContextHolder)" + ".getContext().getAuthentication().getAuthorities()" + ".![authority].contains('ROLE_STAFF')")
   public Page<DepartmentGetDTO> findAll(Pageable pageable) {
 
     Page<Department> departments = departmentRepository.findAll(pageable);
@@ -46,6 +50,7 @@ public class DepartmentService {
     return departmentMapper.toGetDTO(department);
   }
 
+  @CacheEvict(cacheNames = {"statistics", "lists"}, allEntries = true)
   public DepartmentGetDTO update(Long id, DepartmentUpdateDTO departmentUpdateDTO) {
     Department department = findEntityById(id);
 
@@ -56,6 +61,7 @@ public class DepartmentService {
     return departmentMapper.toGetDTO(updatedDepartment);
   }
 
+  @CacheEvict(cacheNames = {"statistics", "lists"}, allEntries = true)
   public void delete(Long id) {
 
     Department department = findEntityById(id);
