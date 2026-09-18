@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { clearSession, getRole } from "../utils/session";
+import ThemeToggle from "./ThemeToggle";
 
 function Sidebar() {
   const navigate = useNavigate();
@@ -64,14 +65,22 @@ function Sidebar() {
         {["ADMIN", "QUALITY_MANAGER"].includes(role) && (
                <NavLink to="/monthly-admissions">Admissions mensuelles</NavLink> )}
 
-      </nav>
+       {["ADMIN", "QHSE_MANAGER", "STAFF"].includes(role) &&  (
+          <NavLink to="/User/profile">
+           user profile 
+          </NavLink>
+      
+      )}
 
+      </nav>
+        
+     
+      
       <div className="sidebar-bottom">
-        <button
-          type="button"
-          className="logout-button"
-          onClick={handleLogout}
-        >
+         
+         <ThemeToggle />
+
+        <button type="button" className="logout-button" onClick={handleLogout} >
           Déconnexion
         </button>
 

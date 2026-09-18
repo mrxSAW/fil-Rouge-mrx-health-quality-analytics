@@ -2,7 +2,14 @@ package org.example.healthcarequalite.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.example.healthcarequalite.dto.report.ReportGetDTO;
-import org.example.healthcarequalite.service.*;
+import org.example.healthcarequalite.entity.Report;
+import org.example.healthcarequalite.enums.ReportType;
+import org.example.healthcarequalite.service.AuditPdfService;
+import org.example.healthcarequalite.service.DepartmentQhsePdfService;
+import org.example.healthcarequalite.service.IncidentExcelService;
+import org.example.healthcarequalite.service.IncidentPdfService;
+import org.example.healthcarequalite.service.MonthlyQualityPdfService;
+import org.example.healthcarequalite.service.ReportService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,108 +38,180 @@ public class ReportController {
     private final DepartmentQhsePdfService departmentQhsePdfService;
     private final ReportService reportService;
 
-    public ReportController(IncidentPdfService incidentPdfService, AuditPdfService auditPdfService, IncidentExcelService incidentExcelService, MonthlyQualityPdfService monthlyQualityPdfService, DepartmentQhsePdfService departmentQhsePdfService,ReportService reportService) {
+    public ReportController(IncidentPdfService incidentPdfService, AuditPdfService auditPdfService, IncidentExcelService incidentExcelService, MonthlyQualityPdfService monthlyQualityPdfService, DepartmentQhsePdfService departmentQhsePdfService, ReportService reportService) {
 
         this.incidentPdfService = incidentPdfService;
         this.auditPdfService = auditPdfService;
         this.incidentExcelService = incidentExcelService;
         this.monthlyQualityPdfService = monthlyQualityPdfService;
         this.departmentQhsePdfService = departmentQhsePdfService;
-        this.reportService = reportService ;
+        this.reportService = reportService;
     }
 
     @GetMapping(value = "/incidents/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> downloadIncidentPdf(@RequestParam(required = false) Long departmentId,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            LocalDate startDate, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            LocalDate endDate) throws IOException {
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate)
+            throws IOException {
 
-        byte[] pdf = incidentPdfService.generateReport( departmentId, startDate, endDate);
+        byte[] pdf = incidentPdfService.generateReport(
+                departmentId,
+                startDate,
+                endDate
+        );
 
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF).header(
+        reportService.saveGeneratedReport(
+                "Rapport des incidents",
+                ReportType.INCIDENT_PDF,
+                pdf,
+                departmentId
+        );
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .header(
                         HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment; filename=\"rapport-incidents.pdf\""
-                ).body(pdf);
+                        ContentDisposition.attachment()
+                                .filename("rapport-incidents.pdf")
+                                .build()
+                                .toString()
+                )
+                .body(pdf);
     }
 
+    @GetMapping(value = "/audits/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> downloadAuditPdf(@RequestParam(required = false) Long departmentId, @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate, @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) throws IOException {
 
+        byte[] pdf = auditPdfService.generateReport(
+                departmentId,
+                startDate,
+                endDate
+        );
 
-    @GetMapping( value = "/audits/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> downloadAuditPdf(@RequestParam(required = false) Long departmentId,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            LocalDate startDate, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            LocalDate endDate) throws IOException {
+        reportService.saveGeneratedReport(
+                "Rapport des audits",
+                ReportType.AUDIT_PDF,
+                pdf,
+                departmentId
+        );
 
-        byte[] pdf = auditPdfService.generateReport( departmentId,  startDate, endDate);
-
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF).header(
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .header(
                         HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment; filename=\"rapport-audits.pdf\""
-                ).body(pdf);
+                        ContentDisposition.attachment()
+                                .filename("rapport-audits.pdf")
+                                .build()
+                                .toString()
+                )
+                .body(pdf);
     }
 
-
-
-
-    @GetMapping( value = "/incidents/excel", produces = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    @GetMapping(value = "/incidents/excel", produces = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     public ResponseEntity<byte[]> downloadIncidentExcel(@RequestParam(required = false) Long departmentId,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            LocalDate startDate, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)  LocalDate endDate) throws IOException {
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate)
+            throws IOException {
 
-        byte[] excel = incidentExcelService.generateReport(departmentId, startDate, endDate);
+        byte[] excel = incidentExcelService.generateReport(
+                departmentId,
+                startDate,
+                endDate
+        );
 
-        return ResponseEntity.ok().contentType(MediaType.parseMediaType(
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ))
-                .header(HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment; filename=\"rapport-incidents.xlsx\""
-                ).body(excel);
+        reportService.saveGeneratedReport(
+                "Export Excel des incidents",
+                ReportType.INCIDENT_EXCEL,
+                excel,
+                departmentId
+        );
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                ))
+                .header(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        ContentDisposition.attachment()
+                                .filename("rapport-incidents.xlsx")
+                                .build()
+                                .toString()
+                )
+                .body(excel);
     }
 
-
-
-
-    @GetMapping(value = "/monthly-quality/pdf", produces = MediaType.APPLICATION_PDF_VALUE )
-    public ResponseEntity<byte[]> downloadMonthlyQualityPdf(@RequestParam Integer year, @RequestParam Integer month) throws IOException {
+    @GetMapping(value = "/monthly-quality/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> downloadMonthlyQualityPdf(@RequestParam Integer year,
+            @RequestParam Integer month) throws IOException {
 
         byte[] pdf = monthlyQualityPdfService.generateReport(year, month);
+
+        reportService.saveGeneratedReport(
+                "Rapport qualité " + month + "/" + year,
+                ReportType.MONTHLY_QUALITY,
+                pdf,
+                null
+        );
 
         String filename = "rapport-qualite-" + year + "-" + month + ".pdf";
 
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
-                .header(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment().filename(filename)
-                                .build().toString()
-                ).body(pdf);
+                .header(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        ContentDisposition.attachment()
+                                .filename(filename)
+                                .build()
+                                .toString()
+                )
+                .body(pdf);
     }
 
-
-
-
-    @GetMapping( value = "/departments/{departmentId}/qhse/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    @GetMapping(value = "/departments/{departmentId}/qhse/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> downloadDepartmentQhsePdf(@PathVariable Long departmentId) throws IOException {
 
         byte[] pdf = departmentQhsePdfService.generateReport(departmentId);
 
-        String filename = "rapport-qhse-departement-" + departmentId + ".pdf";
+        reportService.saveGeneratedReport(
+                "Rapport QHSE par département",
+                ReportType.QHSE_DEPARTMENT,
+                pdf,
+                departmentId
+        );
 
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF).header(
+        String filename =
+                "rapport-qhse-departement-" + departmentId + ".pdf";
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .header(
                         HttpHeaders.CONTENT_DISPOSITION,
-                        ContentDisposition.attachment().filename(filename).build().toString()
-                ).body(pdf);
+                        ContentDisposition.attachment()
+                                .filename(filename)
+                                .build()
+                                .toString()
+                )
+                .body(pdf);
     }
 
-
-
-
     @GetMapping
-    public ResponseEntity<Page<ReportGetDTO>> findAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<Page<ReportGetDTO>> findAll(@RequestParam(required = false) Long departmentId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
 
         if (page < 0) {
-            throw new IllegalArgumentException("Le numéro de page doit être positif ou égal à zéro");
+            throw new IllegalArgumentException(
+                    "Le numéro de page doit être positif ou égal à zéro"
+            );
         }
 
         if (size < 1 || size > 100) {
-            throw new IllegalArgumentException("La taille de la page doit être comprise entre 1 et 100");
+            throw new IllegalArgumentException(
+                    "La taille de la page doit être comprise entre 1 et 100"
+            );
         }
 
         Sort sort = Sort.by(
@@ -142,7 +221,12 @@ public class ReportController {
 
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        Page<ReportGetDTO> reports = reportService.findAll(pageable);
+        Page<ReportGetDTO> reports = reportService.findAll(
+                departmentId,
+                startDate,
+                endDate,
+                pageable
+        );
 
         return ResponseEntity.ok(reports);
     }
@@ -155,7 +239,32 @@ public class ReportController {
         return ResponseEntity.ok(report);
     }
 
+    @GetMapping("/{id}/download")
+    public ResponseEntity<byte[]> downloadStoredReport(@PathVariable Long id) {
 
+        Report report = reportService.getStoredReport(id);
 
+        String contentType;
+        String extension;
 
+        if (report.getType() == ReportType.INCIDENT_EXCEL) {
+            contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            extension = ".xlsx";
+        } else {
+            contentType = MediaType.APPLICATION_PDF_VALUE;
+            extension = ".pdf";
+        }
+
+        String filename = "rapport-" + report.getId() + extension;
+
+        return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
+                .header(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        ContentDisposition.attachment()
+                                .filename(filename)
+                                .build()
+                                .toString()
+                )
+                .body(report.getFileContent());
+    }
 }

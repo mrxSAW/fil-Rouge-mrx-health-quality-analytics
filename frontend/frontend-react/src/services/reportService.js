@@ -42,6 +42,7 @@ async function downloadReport(url, params, filename) {
   }, 1000);
 }
 
+
 export async function downloadIncidentPdf( departmentId, startDate, endDate) {
   await downloadReport(
     "/reports/incidents/pdf",
@@ -54,6 +55,8 @@ export async function downloadIncidentPdf( departmentId, startDate, endDate) {
   );
 }
 
+
+
 export async function downloadAuditPdf( departmentId, startDate, endDate) {
   await downloadReport(  "/reports/audits/pdf",
     {
@@ -65,6 +68,8 @@ export async function downloadAuditPdf( departmentId, startDate, endDate) {
   );
 }
 
+
+
 export async function downloadIncidentExcel( departmentId, startDate,endDate) {
   await downloadReport(  "/reports/incidents/excel",
     {
@@ -74,6 +79,8 @@ export async function downloadIncidentExcel( departmentId, startDate,endDate) {
     "rapport-incidents.xlsx"
   );
 }
+
+
 
 export async function downloadMonthlyQualityPdf(year, month) {
   await downloadReport(
@@ -86,10 +93,33 @@ export async function downloadMonthlyQualityPdf(year, month) {
   );
 }
 
+
 export async function downloadDepartmentQhsePdf(departmentId) {
   await downloadReport(
     `/reports/departments/${departmentId}/qhse/pdf`,
     {},
     `rapport-qhse-departement-${departmentId}.pdf`
+  );
+}
+
+
+
+export async function getReports(  page = 0,  departmentId = "",  startDate = "",  endDate = "") {
+  const response = await api.get("/reports", {
+    params: { page, size: 5, departmentId: departmentId || undefined,
+      startDate: startDate || undefined,endDate: endDate || undefined,
+    },
+  });
+
+  return response.data;
+}
+
+export async function downloadStoredReport(id, type) {
+  const extension = type === "INCIDENT_EXCEL" ? "xlsx" : "pdf";
+
+  await downloadReport(
+    `/reports/${id}/download`,
+    {},
+    `rapport-${id}.${extension}`
   );
 }

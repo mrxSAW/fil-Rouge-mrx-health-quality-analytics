@@ -41,6 +41,8 @@ public class Report {
   @JoinColumn(name="department_id")
     private Department department;
 
-
+    @Lob
+    @Column(name = "file_content", columnDefinition = "LONGBLOB")
+    private byte[] fileContent;
 
 }

@@ -178,9 +178,7 @@ function Incidents() {
             }}
           >
             <option value="">
-              {departmentsLoading
-                ? "Chargement..."
-                : "Tous les départements"}
+              {departmentsLoading ? "Chargement...": "Tous les départements"}
             </option>
 
             {departments.map((department) => (
@@ -317,20 +315,14 @@ function Incidents() {
                         </td>
 
                         <td>
-                          <span
-                            className={`badge gravity-${incident.gravity}`}
-                          >
-                            {gravityLabels[incident.gravity] ||
-                              incident.gravity}
+                          <span className={`badge gravity-${incident.gravity}`} >
+                            {gravityLabels[incident.gravity] || incident.gravity}
                           </span>
                         </td>
 
                         <td>
-                          <span
-                            className={`badge status-${incident.status}`}
-                          >
-                            {statusLabels[incident.status] ||
-                              incident.status}
+                          <span className={`badge status-${incident.status}`}  >
+                            {statusLabels[incident.status] ||incident.status}
                           </span>
                         </td>
                       </tr>
@@ -342,11 +334,8 @@ function Incidents() {
 
             {totalPages > 0 && (
               <div className="pagination">
-                <button
-                  type="button"
-                  disabled={page === 0}
-                  onClick={() => setPage(page - 1)}
-                >
+                <button type="button" disabled={page === 0}
+                  onClick={() => setPage(page - 1)} >
                   Précédent
                 </button>
 
@@ -354,11 +343,8 @@ function Incidents() {
                   Page {page + 1} sur {totalPages}
                 </span>
 
-                <button
-                  type="button"
-                  disabled={page >= totalPages - 1}
-                  onClick={() => setPage(page + 1)}
-                >
+                <button  type="button" disabled={page >= totalPages - 1}
+                  onClick={() => setPage(page + 1)}  >
                   Suivant
                 </button>
               </div>

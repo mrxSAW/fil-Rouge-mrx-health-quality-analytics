@@ -35,3 +35,10 @@ export async function updateUserRole(id, role) {
 export async function deleteUser(id) {
   await api.delete(`/users/${id}`);
 }
+
+
+export async function getMyProfile() {
+  const response = await api.get("/users/me");
+
+  return response.data;
+}

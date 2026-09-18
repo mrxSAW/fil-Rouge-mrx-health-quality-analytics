@@ -1,12 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-
-import {
-  getIncidentById,
-  updateIncidentStatus,
-  deleteIncident,
-} from "../services/incidentService";
-
+import {getIncidentById,updateIncidentStatus, deleteIncident} from "../services/incidentService";
 import { getRole } from "../utils/session";
 
 const typeLabels = {
@@ -47,18 +41,11 @@ function IncidentDetails() {
   const [statusError, setStatusError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const [showDeleteConfirmation, setShowDeleteConfirmation] =
-    useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState("");
-
-  const canEdit = [
-    "ADMIN",
-    "QUALITY_MANAGER",
-    "QHSE_MANAGER",
-  ].includes(role);
-
+  const canEdit = ["ADMIN","QUALITY_MANAGER","QHSE_MANAGER"].includes(role);
   const canDelete = role === "ADMIN";
 
   useEffect(() => {

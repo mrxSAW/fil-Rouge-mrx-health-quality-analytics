@@ -11,6 +11,7 @@ import IncidentCreate from "./pages/IncidentCreate";
 import IncidentDetails from "./pages/IncidentDetails";
 import IncidentEdit from "./pages/IncidentEdit";
 import Audits from "./pages/Audits";
+import UserProfile from "./pages/UserProfile";
 import AuditCreate from "./pages/AuditCreate";
 import AuditDetails from "./pages/AuditDetails";
 import AuditEdit from "./pages/AuditEdit";
@@ -27,6 +28,7 @@ import Register from "./pages/Register";
 import Reports from "./pages/Reports";
 import MonthlyAdmissions from "./pages/MonthlyAdmissions";
 
+
 function App() {
   return (
     <BrowserRouter>
@@ -41,7 +43,7 @@ function App() {
             <Route path="/incidents/:id" element={<IncidentDetails />} />
             <Route path="/departments" element={<Departments />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
-
+            <Route path="/User/profile"  element={<UserProfile/>} />
 
            <Route element={<RoleGuard allowedRoles={["ADMIN"]} />}>
                           <Route path="/users" element={<Users />} />
@@ -78,7 +80,11 @@ function App() {
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+
+      
+    
     </BrowserRouter>
+    
   );
 }
 

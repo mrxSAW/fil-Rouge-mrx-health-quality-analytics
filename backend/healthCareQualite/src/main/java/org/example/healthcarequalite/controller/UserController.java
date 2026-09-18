@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -78,5 +79,15 @@ public class UserController {
     }
 
 
+    @GetMapping("/me")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<UserGetDTO> getMyProfile( Authentication authentication) {
+
+        String connectedEmail = authentication.getName();
+
+        UserGetDTO user = userService.getMyProfile(connectedEmail);
+
+        return ResponseEntity.ok(user);
+    }
 
 }

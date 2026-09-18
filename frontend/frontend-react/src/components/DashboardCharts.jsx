@@ -1,23 +1,7 @@
 import { useEffect, useState } from "react";
-import {
-  CartesianGrid,
-  Cell,
-  Legend,
-  Line,
-  LineChart,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { CartesianGrid,Cell,Legend, Line,LineChart,Pie,  PieChart,ResponsiveContainer,  Tooltip,  XAxis,  YAxis,} from "recharts";
 
-import {
-  getMonthlyIncidents,
-  getIncidentsByType,
-  getIncidentsByGravity,
-} from "../services/statisticsService";
+import {getMonthlyIncidents, getIncidentsByType, getIncidentsByGravity,} from "../services/statisticsService";
 
 const typeLabels = {
   MEDICAL: "Médical",

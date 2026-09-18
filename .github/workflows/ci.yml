@@ -1,0 +1,94 @@
+name: Verification du projet
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    name: Backend - compilation et tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    defaults:
+      run:
+        working-directory: backend/healthCareQualite
+
+    steps:
+      - name: Recuperer le code
+        uses: actions/checkout@v7
+
+      - name: Installer Java 21
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+          cache-dependency-path: backend/healthCareQualite/pom.xml
+
+      - name: Compiler et executer les tests
+        run: mvn -B -Dspring.profiles.active=test clean verify
+        env:
+          SPRING_DATA_REDIS_HOST: localhost
+          SPRING_DATA_REDIS_PORT: "6379"
+          APP_JWT_SECRET: ci-only-secret-for-automated-tests-at-least-32-characters
+
+  frontend:
+    name: Frontend - lint et compilation
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    defaults:
+      run:
+        working-directory: frontend/frontend-react
+
+    steps:
+      - name: Recuperer le code
+        uses: actions/checkout@v7
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/frontend-react/package-lock.json
+
+      - name: Installer les dependances
+        run: npm ci
+
+      - name: Verifier le code
+        run: npm run lint
+
+      - name: Compiler le frontend
+        run: npm run build
+
+  docker:
+    name: Construction des images Docker
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: [backend, frontend]
+
+    steps:
+      - name: Recuperer le code
+        uses: actions/checkout@v7
+
+      - name: Construire l'image backend
+        run: docker build -t health-quality-backend:ci ./backend/healthCareQualite
+
+      - name: Construire l'image frontend
+        run: docker build -t health-quality-frontend:ci ./frontend/frontend-react

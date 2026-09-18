@@ -1,0 +1,2 @@
+ALTER TABLE report
+    ADD COLUMN file_content LONGBLOB NULL;

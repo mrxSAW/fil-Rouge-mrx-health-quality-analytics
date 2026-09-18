@@ -1,12 +1,8 @@
 import { useEffect, useState } from "react";
 import { getAllDepartments } from "../services/departmentService";
-import {
-  downloadIncidentPdf,
-  downloadAuditPdf,
-  downloadIncidentExcel,
-  downloadMonthlyQualityPdf,
-  downloadDepartmentQhsePdf,
-} from "../services/reportService";
+import {downloadIncidentPdf,downloadAuditPdf,downloadIncidentExcel, downloadMonthlyQualityPdf,downloadDepartmentQhsePdf,} from "../services/reportService";
+import ReportList from "./ReportList";
+
 
 function Reports() {
   const [reportType, setReportType] = useState("INCIDENT_PDF");
@@ -25,6 +21,7 @@ function Reports() {
 
   const isMonthlyReport = reportType === "MONTHLY_QUALITY";
   const isQhseReport = reportType === "DEPARTMENT_QHSE";
+  const [historyVersion, setHistoryVersion] = useState(0);
 
   useEffect(() => {
     let active = true;
@@ -66,6 +63,8 @@ function Reports() {
   async function handleDownload(event) {
     event.preventDefault();
 
+    
+    
     if (downloading) {
       return;
     }
@@ -83,13 +82,7 @@ function Reports() {
       return;
     }
 
-    if (
-      !isMonthlyReport &&
-      !isQhseReport &&
-      startDate &&
-      endDate &&
-      startDate > endDate
-    ) {
+    if (!isMonthlyReport && !isQhseReport && startDate &&  endDate && startDate > endDate) {
       setError("La date de début doit précéder la date de fin.");
       return;
     }
@@ -97,33 +90,19 @@ function Reports() {
     setDownloading(true);
 
     try {
-      const selectedDepartmentId = departmentId
-        ? Number(departmentId)
-        : undefined;
+      const selectedDepartmentId = departmentId ? Number(departmentId): undefined;
 
       switch (reportType) {
         case "INCIDENT_PDF":
-          await downloadIncidentPdf(
-            selectedDepartmentId,
-            startDate,
-            endDate
-          );
+          await downloadIncidentPdf(  selectedDepartmentId, startDate, endDate);
           break;
 
         case "AUDIT_PDF":
-          await downloadAuditPdf(
-            selectedDepartmentId,
-            startDate,
-            endDate
-          );
+          await downloadAuditPdf(selectedDepartmentId,startDate,endDate);
           break;
 
         case "INCIDENT_EXCEL":
-          await downloadIncidentExcel(
-            selectedDepartmentId,
-            startDate,
-            endDate
-          );
+          await downloadIncidentExcel(selectedDepartmentId,startDate, endDate);
           break;
 
         case "MONTHLY_QUALITY": {
@@ -145,6 +124,7 @@ function Reports() {
       }
 
       setSuccess("Le téléchargement du rapport a été lancé.");
+      setHistoryVersion((value) => value + 1);
     } catch (error) {
       setError(error.message || "Impossible de télécharger le rapport.");
     } finally {
@@ -298,6 +278,8 @@ function Reports() {
           </button>
         </form>
       </section>
+
+      <ReportList key={historyVersion} />
     </main>
   );
 }

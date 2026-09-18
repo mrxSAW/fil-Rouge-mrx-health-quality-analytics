@@ -94,11 +94,23 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    private User findEntityById(Long id) {
+    public User findEntityById(Long id) {
 
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Utilisateur introuvable : " + id));
     }
+
+
+   public UserGetDTO getMyProfile(String connectedEmail){
+        User user =userRepository.findByEmail(connectedEmail)
+                   .orElseThrow( ()-> new ResourceNotFoundException("user introvable"));
+
+        return userMapper.toGetDTO(user);
+    }
+
+
+
+
 
 
 }

@@ -22,6 +22,7 @@ public class MonthlyQualityPdfService {
     private final StatisticsService statisticsService;
 
     public MonthlyQualityPdfService(StatisticsService statisticsService) {
+
         this.statisticsService = statisticsService;
     }
 
@@ -77,21 +78,13 @@ public class MonthlyQualityPdfService {
                 content.showText("Incidents critiques : " + report.getCriticalIncidents());
                 content.newLine();
 
-                content.showText(
-                        "Nombre d'audits : " + report.getTotalAudits()
-                );
+                content.showText( "Nombre d'audits : " + report.getTotalAudits() );
                 content.newLine();
 
-                content.showText(
-                        "Taux de conformité : "
-                                + formatValue(report.getConformityRate(), " %")
-                );
+                content.showText( "Taux de conformité : " + formatValue(report.getConformityRate(), " %") );
                 content.newLine();
 
-                content.showText(
-                        "Score qualité : "
-                                + formatValue(report.getQualityScore(), " / 100")
-                );
+                content.showText( "Score qualité : " + formatValue(report.getQualityScore(), " / 100")  );
                 content.newLine();
                 content.newLine();
 

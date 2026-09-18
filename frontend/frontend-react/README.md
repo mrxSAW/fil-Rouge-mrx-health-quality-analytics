@@ -1,16 +1,86 @@
-# React + Vite
+# Frontend Health Quality Analytics
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interface React pour le suivi de la qualité des soins.
 
-Currently, two official plugins are available:
+## Technologies
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+React, Vite, React Router, Axios, Recharts et CSS.
 
-## React Compiler
+## Fonctionnalités
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Connexion et inscription.
+- Navigation adaptée au rôle.
+- Gestion des incidents, audits et actions correctives.
+- Administration des utilisateurs et départements.
+- Admissions mensuelles.
+- Tableau de bord et graphiques.
+- Téléchargement des rapports PDF et Excel.
 
-## Expanding the ESLint configuration
+## Organisation
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- `src/pages` : pages de l'application.
+- `src/components` : composants réutilisables.
+- `src/services` : appels API.
+- `src/api` : configuration Axios.
+- `src/utils` : gestion de session.
+- `src/index.css` : styles.
+
+## Lancement local
+
+Utiliser Node.js 22 à jour avec npm.
+Démarrer le backend sur le port 8080.
+
+Depuis ce dossier :
+
+```powershell
+npm ci
+npm run dev
+```
+
+Ouvrir l'adresse indiquée par Vite, généralement :
+http://localhost:5173
+
+Vite transmet les requêtes `/api` au backend local sur le port 8080.
+
+## Vérifications
+
+```powershell
+npm run lint
+npm run build
+```
+
+Le build produit le dossier `dist`.
+
+Un avertissement concernant la taille des fichiers JavaScript
+ne signifie pas que la compilation a échoué.
+
+## Lancement Docker
+
+Depuis la racine du dépôt, après préparation de `.env` :
+
+```powershell
+docker compose up --build -d
+```
+
+Application : http://localhost:3000
+
+Le Dockerfile compile React puis copie `dist` dans Nginx.
+Nginx transmet `/api` au service backend et permet l'actualisation
+des pages utilisant React Router.
+
+## Authentification
+
+Axios transmet le token JWT pour les appels protégés.
+La session est conservée dans le stockage local du navigateur.
+
+Les menus et routes dépendent du rôle.
+Le backend reste responsable de l'autorisation des opérations.
+
+## Vérifications manuelles
+
+- Connexion et déconnexion.
+- Accès direct à une page non autorisée.
+- Création et modification des données selon le rôle.
+- Filtres et pagination.
+- Admissions et taux d'incidents.
+- Téléchargement et ouverture des cinq rapports.

@@ -987,3 +987,192 @@ input {
     width: 100%;
   }
 }
+
+
+
+/* Thème clair par défaut */
+:root {
+  color-scheme: light;
+}
+
+/* Couleurs du thème sombre */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --background: #101923;
+  --surface: #1a2836;
+  --text: #e5edf5;
+  --muted: #b1c2d2;
+  --border: #35495b;
+  --primary: #087f8c;
+  --primary-dark: #06636d;
+
+  background: var(--background);
+  color: var(--text);
+}
+
+body {
+  background: var(--background);
+  color: var(--text);
+}
+
+/* Bouton de changement de thème */
+.theme-button {
+  width: 100%;
+  margin-bottom: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.theme-button:hover {
+  background: var(--background);
+}
+
+/* Champs et boutons secondaires */
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea,
+[data-theme="dark"] .filter-field select,
+[data-theme="dark"] .form-panel textarea,
+[data-theme="dark"] .logout-button,
+[data-theme="dark"] .secondary-button {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+  color: var(--muted);
+}
+
+/* Navigation et tableaux */
+[data-theme="dark"] .sidebar-nav a:hover,
+[data-theme="dark"] .logout-button:hover,
+[data-theme="dark"] .secondary-button:hover,
+[data-theme="dark"] .data-table th,
+[data-theme="dark"] .data-table tbody tr:hover,
+[data-theme="dark"] .filters-bar {
+  background: #223546;
+}
+
+[data-theme="dark"] .sidebar-nav a.active,
+[data-theme="dark"] .sidebar-note {
+  background: #163e45;
+}
+
+[data-theme="dark"] .sidebar-nav a.active,
+[data-theme="dark"] .sidebar-brand span,
+[data-theme="dark"] .stat-value {
+  color: #76dce1;
+}
+
+[data-theme="dark"] a:not(.primary-link):not(.sidebar-brand):not(.sidebar-nav a) {
+  color: #76dce1;
+}
+
+[data-theme="dark"] a.delete-link {
+  color: #fca5a5;
+}
+
+/* Messages */
+[data-theme="dark"] .error-message,
+[data-theme="dark"] .delete-confirmation {
+  background: #42242b;
+  color: #fecaca;
+  border-color: #78404c;
+}
+
+[data-theme="dark"] .success-message {
+  background: #163c30;
+  color: #bbf7d0;
+}
+
+/* Bloc du taux d’incidents */
+[data-theme="dark"] .incident-rate,
+[data-theme="dark"] .incident-rate-field input,
+[data-theme="dark"] .incident-rate-field select {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+[data-theme="dark"] .incident-rate-heading h2,
+[data-theme="dark"] .incident-rate-field label,
+[data-theme="dark"] .incident-rate-card dd {
+  color: var(--text);
+}
+
+[data-theme="dark"] .incident-rate-heading p,
+[data-theme="dark"] .incident-rate-period,
+[data-theme="dark"] .incident-rate-card dt,
+[data-theme="dark"] .incident-rate-note {
+  color: var(--muted);
+}
+
+[data-theme="dark"] .incident-rate-card {
+  background: #223546;
+  border-color: var(--border);
+}
+
+[data-theme="dark"] .incident-rate-highlight {
+  background: #163e45;
+}
+
+[data-theme="dark"] .incident-rate-highlight dd {
+  color: #76dce1;
+}
+
+/* Lisibilité des axes des graphiques */
+[data-theme="dark"] .recharts-cartesian-axis-tick-value {
+  fill: var(--muted);
+}
+
+
+
+.app-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-footer {
+  margin-top: auto;
+  padding: 18px 24px;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  text-align: center;
+  font-size: 13px;
+}
+
+.app-footer p {
+  margin: 4px 0;
+}
+
+
+
+.report-history-filters {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+  align-items: end;
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.report-history-filters .filter-field {
+  min-width: 0;
+}
+
+.report-history-filters input,
+.report-history-filters select,
+.report-history-filters button {
+  min-height: 46px;
+}
+
+@media (max-width: 900px) {
+  .report-history-filters {
+    grid-template-columns: 1fr;
+  }
+}
