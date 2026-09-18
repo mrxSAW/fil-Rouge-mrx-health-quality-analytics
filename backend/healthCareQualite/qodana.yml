@@ -23,7 +23,10 @@ jobs:
       - name: Analyser avec Qodana
         uses: JetBrains/qodana-action@v2026.2
         with:
-          args: --project-dir,backend/healthCareQualite
+          args: >-
+            --project-dir backend/healthCareQualite
+            --image jetbrains/qodana-jvm-community:2026.2
+            --config qodana.yaml
           upload-result: true
           artifact-name: qodana-backend-report
           post-pr-comment: false
