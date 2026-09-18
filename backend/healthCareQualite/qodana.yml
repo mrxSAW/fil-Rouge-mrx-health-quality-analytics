@@ -1,0 +1,31 @@
+name: Analyse qualite Qodana
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  qodana:
+    name: Analyse du backend
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Recuperer le code
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Analyser avec Qodana
+        uses: JetBrains/qodana-action@v2026.2
+        with:
+          args: --project-dir,backend/healthCareQualite
+          upload-result: true
+          artifact-name: qodana-backend-report
+          post-pr-comment: false
+          use-annotations: false
+          pr-mode: false
