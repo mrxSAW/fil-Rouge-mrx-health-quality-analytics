@@ -6,9 +6,8 @@ import org.example.healthcarequalite.dto.correctiveAction.CorrectiveActionGetDTO
 import org.example.healthcarequalite.dto.correctiveAction.CorrectiveActionPostDTO;
 import org.example.healthcarequalite.dto.correctiveAction.CorrectiveActionStatusDTO;
 import org.example.healthcarequalite.dto.correctiveAction.CorrectiveActionUpdateDTO;
-import org.example.healthcarequalite.dto.statistics.IncidentGravityStatisticsDTO;
+import org.example.healthcarequalite.dto.user.ResponsibleUserDTO;
 import org.example.healthcarequalite.service.CorrectiveActionService;
-import org.example.healthcarequalite.service.StatisticsService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,8 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;import org.example.healthcarequalite.dto.user.ResponsibleUserDTO;
 
 @RestController
 @RequestMapping("/api/corrective-actions")

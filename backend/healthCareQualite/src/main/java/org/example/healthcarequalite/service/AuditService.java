@@ -10,7 +10,6 @@ import org.example.healthcarequalite.mapper.AuditMapper;
 import org.example.healthcarequalite.repository.AuditRepository;
 import org.example.healthcarequalite.repository.DepartmentRepository;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;

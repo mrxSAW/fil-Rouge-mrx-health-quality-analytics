@@ -2,12 +2,13 @@ package org.example.healthcarequalite.mapper;
 
 import org.example.healthcarequalite.dto.correctiveAction.CorrectiveActionGetDTO;
 import org.example.healthcarequalite.dto.correctiveAction.CorrectiveActionPostDTO;
+import org.example.healthcarequalite.dto.correctiveAction.CorrectiveActionUpdateDTO;
 import org.example.healthcarequalite.entity.CorrectiveAction;
 import org.example.healthcarequalite.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;import org.example.healthcarequalite.dto.correctiveAction.CorrectiveActionUpdateDTO;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
 public interface CorrectiveActionMapper {

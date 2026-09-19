@@ -1,9 +1,9 @@
 package org.example.healthcarequalite.service;
 
-import org.example.healthcarequalite.entity.Department;
 import org.example.healthcarequalite.dto.department.DepartmentGetDTO;
 import org.example.healthcarequalite.dto.department.DepartmentPostDTO;
 import org.example.healthcarequalite.dto.department.DepartmentUpdateDTO;
+import org.example.healthcarequalite.entity.Department;
 import org.example.healthcarequalite.exception.ResourceNotFoundException;
 import org.example.healthcarequalite.mapper.DepartmentMapper;
 import org.example.healthcarequalite.repository.DepartmentRepository;
@@ -12,8 +12,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class DepartmentService {

@@ -1,7 +1,7 @@
 package org.example.healthcarequalite.config;
 
-import org.example.healthcarequalite.enums.Role;
 import org.example.healthcarequalite.entity.User;
+import org.example.healthcarequalite.enums.Role;
 import org.example.healthcarequalite.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;

@@ -2,7 +2,9 @@ package org.example.healthcarequalite.dto.statistics;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;import java.io.Serializable;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 
 @Data
 @NoArgsConstructor

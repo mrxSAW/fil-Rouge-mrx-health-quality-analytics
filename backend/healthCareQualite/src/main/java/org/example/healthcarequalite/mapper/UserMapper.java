@@ -1,8 +1,8 @@
 package org.example.healthcarequalite.mapper;
 
-import org.example.healthcarequalite.entity.User;
 import org.example.healthcarequalite.dto.user.UserGetDTO;
 import org.example.healthcarequalite.dto.user.UserUpdateDTO;
+import org.example.healthcarequalite.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

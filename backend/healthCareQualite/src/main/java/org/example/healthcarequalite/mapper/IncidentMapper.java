@@ -1,9 +1,9 @@
 package org.example.healthcarequalite.mapper;
 
-import org.example.healthcarequalite.entity.Incident;
 import org.example.healthcarequalite.dto.incident.IncidentGetDTO;
 import org.example.healthcarequalite.dto.incident.IncidentPostDTO;
 import org.example.healthcarequalite.dto.incident.IncidentUpdateDTO;
+import org.example.healthcarequalite.entity.Incident;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

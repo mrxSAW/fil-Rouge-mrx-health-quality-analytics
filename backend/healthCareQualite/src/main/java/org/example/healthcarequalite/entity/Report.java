@@ -2,13 +2,13 @@ package org.example.healthcarequalite.entity;
 
 
 import jakarta.persistence.*;
-import    org.example.healthcarequalite.enums.ReportType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.healthcarequalite.enums.ReportType;
 
 import java.time.LocalDate;
 
